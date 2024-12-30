@@ -1,0 +1,43 @@
+name: Build and Deploy Angular App
+
+on:
+  push:
+    branches:
+      - master  # Lorsque vous poussez sur la branche master
+  pull_request:
+    branches:
+      - master  # Lors d'une pull request vers la branche master
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout le code source
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Configuration de Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18.20.3'  # Utilisation de Node.js version 18.20.3
+
+      # Installation des dépendances
+      - name: Install dependencies
+        run: |
+          npm install
+
+      # Construction de l'application Angular
+      - name: Build Angular app
+        run: |
+          npm run build --prod
+
+      # Déploiement sur GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages # Branche de déploiement
+          folder: dist/app2 # Dossier de sortie du build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
