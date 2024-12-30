@@ -1,10 +1,8 @@
 name: Build and Deploy Angular App
-
 on:
   push:
     branches:
       - master  # Déclenche la pipeline uniquement sur la branche master
-
 jobs:
   build:
     runs-on: ubuntu-latest
