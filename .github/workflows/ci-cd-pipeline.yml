@@ -3,41 +3,35 @@ name: Build and Deploy Angular App
 on:
   push:
     branches:
-      - master  # Lorsque vous poussez sur la branche master
-  pull_request:
-    branches:
-      - master  # Lors d'une pull request vers la branche master
+      - master  # Déclenche la pipeline uniquement sur la branche master
 
 jobs:
-  build_and_deploy:
+  build:
     runs-on: ubuntu-latest
-
     steps:
-      # Checkout le code source
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2  # Cloner le dépôt
 
-      # Configuration de Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '18.20.3'  # Utilisation de Node.js version 18.20.3
+          node-version: '18.20.3'  # Configuration de la version de Node.js requise
 
-      # Installation des dépendances
       - name: Install dependencies
-        run: |
-          npm install
+        run: npm install  # Installer les dépendances de l'application
 
-      # Construction de l'application Angular
-      - name: Build Angular app
-        run: |
-          npm run build --prod --project app2
+      - name: Build the Angular application
+        run: npm run build --prod  # Construire l'application Angular
 
-      # Déploiement sur GitHub Pages
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build  # Ce job dépend du job 'build'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2  # Cloner à nouveau le dépôt
+
       - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          branch: gh-pages # Branche de déploiement
-          folder: dist/app2 # Dossier de sortie du build
-        env:
-          GITHUB_TOKEN: ${{ secrets.CHAYMAASECRET }}
+          github_token: ${{ secrets.CHAYMAASECRET }}
+          publish_dir: ./dist/app2/browser  # Dossier de build de l'application Angular
