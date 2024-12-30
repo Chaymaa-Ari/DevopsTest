@@ -1,0 +1,21 @@
+<div class="show-list">
+  <h2>Shows</h2>
+  <button routerLink="add" class="a">Add show</button>
+  <br><br>
+  <!-- Affichage du message de chargement -->
+  <div *ngIf="isLoading">Chargement des données...</div>
+  
+  <!-- Affichage des shows une fois chargés -->
+  <div *ngIf="!isLoading && shows.length > 0" class="card-container">
+    <div class="card" *ngFor="let show of shows">
+      <h3>{{ show.title }}</h3>
+      <p>{{ show.description }}</p>
+      <p><strong>Episodes:</strong> {{ show.episodes }}</p>
+    </div>
+  </div>
+  
+  <!-- Message en cas de liste vide -->
+  <div *ngIf="!isLoading && shows.length === 0">
+    Aucun show disponible.
+  </div>
+</div>
